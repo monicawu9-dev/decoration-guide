@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>装修全流程指南 - 精装房/毛坯房/自建房</title>
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --card: #ffffff;
+    --text: #2c2c2c;
+    --text-secondary: #666;
+    --border: #e8e4df;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --radius: 12px;
+    /* 精装房 */
+    --color-stone: #5f8b6f;
+    --color-stone-light: #e8f2ea;
+    --color-stone-bg: #f2f8f4;
+    /* 毛坯房 */
+    --color-raw: #4a6fa5;
+    --color-raw-light: #e6eef8;
+    --color-raw-bg: #f2f6fc;
+    /* 自建房 */
+    --color-self: #c4823e;
+    --color-self-light: #fdf0e0;
+    --color-self-bg: #fef9f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 40px 0 10px;
+  }
+  .header .icon { font-size: 48px; margin-bottom: 8px; }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+  }
+
+  /* Type Selector */
+  .type-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 28px 0;
+    flex-wrap: wrap;
+  }
+  .type-btn {
+    flex: 1;
+    min-width: 140px;
+    max-width: 220px;
+    padding: 16px 20px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .type-btn:hover {
+    border-color: #ccc;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+  .type-btn .emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+  .type-btn .sub { font-size: 12px; font-weight: 400; color: #999; margin-top: 4px; }
+
+  .type-btn.active-stone { border-color: var(--color-stone); background: var(--color-stone-bg); color: var(--color-stone); }
+  .type-btn.active-raw { border-color: var(--color-raw); background: var(--color-raw-bg); color: var(--color-raw); }
+  .type-btn.active-self { border-color: var(--color-self); background: var(--color-self-bg); color: var(--color-self); }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 20px 0 28px;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    text-align: center;
+    padding: 12px 20px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-width: 100px;
+  }
+  .stat-item .num { font-size: 24px; font-weight: 700; }
+  .stat-item .label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .stat-stone .num { color: var(--color-stone); }
+  .stat-raw .num { color: var(--color-raw); }
+  .stat-self .num { color: var(--color-self); }
+
+  /* Phase Card */
+  .phase-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border);
+  }
+  .phase-card.completed { opacity: 0.7; }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+    gap: 14px;
+    transition: background 0.15s;
+  }
+  .phase-header:hover { background: #fafaf8; }
+
+  .phase-number {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .phase-number.stone { background: var(--color-stone); }
+  .phase-number.raw { background: var(--color-raw); }
+  .phase-number.self { background: var(--color-self); }
+
+  .phase-info { flex: 1; min-width: 0; }
+  .phase-title { font-size: 17px; font-weight: 600; }
+  .phase-time { font-size: 13px; color: var(--text-secondary); }
+
+  .phase-arrow {
+    font-size: 20px; color: #bbb; transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+  .phase-card.open .phase-arrow { transform: rotate(180deg); }
+
+  .phase-check {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer;
+    border: 2px solid #ddd;
+    background: #fff;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .phase-check:hover { border-color: #aaa; }
+  .phase-check.done { background: #4caf50; border-color: #4caf50; color: #fff; }
+
+  /* Phase Detail */
+  .phase-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .phase-detail-inner {
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .phase-card.open .phase-detail { max-height: 3000px; }
+
+  .detail-section {
+    margin-top: 16px;
+  }
+  .detail-section h4 {
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .detail-section h4 .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%; display: inline-block;
+  }
+  .dot.stone { background: var(--color-stone); }
+  .dot.raw { background: var(--color-raw); }
+  .dot.self { background: var(--color-self); }
+
+  .step-list { list-style: none; }
+  .step-list li {
+    padding: 8px 12px 8px 28px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.7;
+    border-left: 2px solid #eee;
+    margin-left: 6px;
+  }
+  .step-list li::before {
+    content: '';
+    position: absolute; left: -6px; top: 14px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid #ccc; background: #fff;
+  }
+  .step-list li:last-child { border-left-color: transparent; }
+  .step-list li.stone-dot::before { border-color: var(--color-stone); }
+  .step-list li.raw-dot::before { border-color: var(--color-raw); }
+  .step-list li.self-dot::before { border-color: var(--color-self); }
+
+  .precaution-box {
+    background: #fffbf5;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .precaution-box .warn-icon { margin-right: 4px; }
+  .precaution-box strong { color: #b45309; }
+
+  .tooltip-box {
+    background: #f0f7ff;
+    border: 1px solid #b3d4ff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .tooltip-box .tip-icon { margin-right: 4px; }
+  .tooltip-box strong { color: #2563eb; }
+
+  /* Progress Bar */
+  .progress-container {
+    margin: 20px 0 24px;
+  }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 6px; background: #e8e4df; border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .progress-fill.stone { background: var(--color-stone); }
+  .progress-fill.raw { background: var(--color-raw); }
+  .progress-fill.self { background: var(--color-self); }
+
+  /* Jump to top */
+  .jump-top {
+    position: fixed; bottom: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--card);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    border: none; cursor: pointer;
+    font-size: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+  }
+  .jump-top.visible { opacity: 1; pointer-events: auto; }
+
+  /* Quick Nav */
+  .quick-nav {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+  .quick-nav-btn {
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--card);
+    font-size: 13px; cursor: pointer; transition: all 0.15s;
+    color: var(--text-secondary);
+  }
+  .quick-nav-btn:hover { border-color: #aaa; background: #fafafa; }
+  .quick-nav-btn.active-stone { border-color: var(--color-stone); color: var(--color-stone); background: var(--color-stone-light); font-weight: 600; }
+  .quick-nav-btn.active-raw { border-color: var(--color-raw); color: var(--color-raw); background: var(--color-raw-light); font-weight: 600; }
+  .quick-nav-btn.active-self { border-color: var(--color-self); color: var(--color-self); background: var(--color-self-light); font-weight: 600; }
+
+  /* Reset button */
+  .reset-bar {
+    text-align: center; margin: 24px 0;
+  }
+  .reset-btn {
+    padding: 8px 20px; border-radius: 20px;
+    border: 1px solid #ddd; background: var(--card);
+    font-size: 13px; cursor: pointer; color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { border-color: #999; color: var(--text); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 22px; }
+    .type-btn { padding: 12px 14px; font-size: 14px; min-width: 100px; }
+    .type-btn .emoji { font-size: 22px; }
+    .stats-bar { gap: 12px; }
+    .stat-item { padding: 10px 14px; min-width: 80px; }
+    .stat-item .num { font-size: 20px; }
+    .phase-header { padding: 14px 16px; }
+    .phase-title { font-size: 15px; }
+    .phase-detail-inner { padding: 0 14px 16px; }
+    .step-list li { font-size: 13px; padding: 6px 10px 6px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="icon">🏠</div>
+    <h1>装修全流程指南</h1>
+    <p>精装房 · 毛坯房 · 自建房 — 再也不怕搞不清流程了</p>
+  </div>
+
+  <!-- Type Selector -->
+  <div class="type-selector" id="typeSelector">
+    <div class="type-btn active-raw" data-type="raw" onclick="switchType('raw')">
+      <span class="emoji">🧱</span>
+      毛坯房
+      <div class="sub">从零开始 · 全流程装修</div>
+    </div>
+    <div class="type-btn" data-type="stone" onclick="switchType('stone')">
+      <span class="emoji">✨</span>
+      精装房
+      <div class="sub">收房改造 · 软装进场</div>
+    </div>
+    <div class="type-btn" data-type="self" onclick="switchType('self')">
+      <span class="emoji">🏡</span>
+      自建房
+      <div class="sub">独立宅院 · 从建到装</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar"></div>
+
+  <!-- Progress -->
+  <div class="progress-container">
+    <div class="progress-label">
+      <span>整体进度</span>
+      <span id="progressText">0 / 0 阶段完成</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill raw" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Quick Nav -->
+  <div class="quick-nav" id="quickNav"></div>
+
+  <!-- Phases -->
+  <div id="phasesContainer"></div>
+
+  <!-- Reset -->
+  <div class="reset-bar">
+    <button class="reset-btn" onclick="resetAll()">🔄 重置所有勾选状态</button>
+  </div>
+
+</div>
+
+<button class="jump-top" id="jumpTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+<script>
+// ============ DATA ============
+const data = {
+  raw: {
+    name: '毛坯房',
+    emoji: '🧱',
+    color: 'raw',
+    phases: [
+      {
+        id: 'r1', title: '第 1 阶段：前期准备与设计规划', time: '约 7-15 天',
+        steps: [
+          '收房验房：检查墙面空鼓、裂缝、渗水，测量层高和平整度',
+          '明确装修风格与预算：参考装修案例图，确定整体风格（现代/简约/新中式等）',
+          '选择装修方式：清包（自己买所有材料）、半包（自己买主材）或全包',
+          '找设计师/装修公司：多比较 2-3 家，看工地看口碑，签正规合同',
+          '量房出图：设计师上门实测，出平面布局图、水电图、效果图',
+          '办理物业装修手续：提交施工图纸，缴纳装修押金'
+        ],
+        precautions: '前期规划是整个装修最关键的一步！风格不确定就开工，后面改起来费钱又费时。建议至少花一周时间逛建材市场和家具城，心里有数了再动工。合同一定要写清楚材料品牌、规格、环保等级。'
+      },
+      {
+        id: 'r2', title: '第 2 阶段：主体拆改', time: '约 3-7 天',
+        steps: [
+          '拆除非承重墙、砌新墙：明确承重结构，严禁动承重墙和剪力墙',
+          '铲除原墙皮：直到露出水泥层，方便后续批灰',
+          '封阳台、换窗户：确定好窗户材质和开启方式',
+          '新砌墙体：植筋挂网，新旧墙连接处植入钢筋',
+          '清理建筑垃圾：及时运走，不要堵塞公共区域'
+        ],
+        precautions: '⚠️ 承重墙绝对不能动！敲之前确认图纸。砌新墙一定要植筋+挂钢丝网，否则以后百分百开裂。拆改时把下水管口和地漏用布堵住，防止碎渣掉进去堵管。'
+      },
+      {
+        id: 'r3', title: '第 3 阶段：水电改造（隐蔽工程）', time: '约 7-12 天',
+        steps: [
+          '水电定位：确定所有开关、插座、龙头、花洒位置，画在墙上',
+          '开槽布管：墙面开槽，布设水管和电管，强弱电分开走',
+          '水管打压测试：加压到 0.8MPa，保持 30 分钟不掉压才算合格',
+          '电路绝缘测试：确保无短路漏电',
+          '拍照留底：水电走向全部拍照存档，方便日后维修定位',
+          '中央空调/新风/地暖定位：如有这些设备，此时确定位置和管路'
+        ],
+        precautions: '⚠️ 水电是装修的「血管」，一旦封起来再改代价极大！插座宁可多留几个，尤其是厨房、电视墙、床头。水管建议走顶（吊顶内）便于以后检修漏水。强弱电线管交叉处要包锡纸防干扰。完工后一定要全屋拍照存档！'
+      },
+      {
+        id: 'r4', title: '第 4 阶段：防水工程', time: '约 3-5 天',
+        steps: [
+          '卫生间防水：地面+墙面（淋浴区做到 1.8 米，其他区域做到 30cm）',
+          '厨房/阳台防水：地面全做，墙面翻边 30cm',
+          '闭水试验：蓄水 3-5cm 深，保持 48 小时',
+          '到楼下检查：确认无渗漏后方可进行下一步',
+          '防水保护层：防水层干透后做水泥砂浆保护'
+        ],
+        precautions: '⚠️ 防水是装修最容易出问题的地方！闭水试验必须做满 48 小时，自己下楼去看。卫生间门口要做出防水坎，防止水往外渗。管道根部、墙角、地漏周围要加强处理。'
+      },
+      {
+        id: 'r5', title: '第 5 阶段：泥瓦工程', time: '约 15-20 天',
+        steps: [
+          '瓷砖铺贴：先贴墙砖再贴地砖，从里往外铺',
+          '地面找平：水泥砂浆找平，预留地板厚度',
+          '门槛石/窗台石安装',
+          '地漏安装：确保排水坡度正确',
+          '瓷砖美缝：瓷砖铺完干透后做，选耐脏耐磨的美缝剂',
+          '卫生间回填：如用陶粒回填，注意不要破坏防水'
+        ],
+        precautions: '先贴墙砖再贴地砖可以避免踩坏地砖。瓷砖最好多买 5%-10% 作为损耗备料。贴完用空鼓锤检查，单片空鼓率不超过 5%。地漏要选防臭的深水封地漏。'
+      },
+      {
+        id: 'r6', title: '第 6 阶段：木工工程', time: '约 10-15 天',
+        steps: [
+          '吊顶制作：轻钢龙骨+石膏板，留出灯位和检修口',
+          '背景墙造型：电视墙、沙发背景墙等',
+          '木作柜体：衣柜、橱柜、鞋柜等定制柜安装（也可在油漆后）',
+          '门套、窗套基础制作'
+        ],
+        precautions: '吊顶建议用轻钢龙骨，比木龙骨更防潮防变形。石膏板接缝处留 3-5mm 伸缩缝，防止开裂。定制柜如果先装，要做好成品保护，避免油漆弄脏。'
+      },
+      {
+        id: 'r7', title: '第 7 阶段：油漆工程', time: '约 10-15 天',
+        steps: [
+          '墙面基层处理：刷墙固/界面剂',
+          '批刮腻子 2-3 遍：每遍等干透再刮下一遍',
+          '打磨墙面：用砂纸打磨平整光滑',
+          '刷底漆 1 遍',
+          '刷面漆 2 遍：乳胶漆或艺术漆，调色需一次性调够',
+          '木器漆施工：门窗套、柜体等木器上漆'
+        ],
+        precautions: '腻子一定要等干透了再刷漆，否则以后起皮脱落。乳胶漆要用同一批次调色，避免色差。油漆期间注意通风，但避免大风直吹导致开裂。做完油漆后打胶收口，让整体更精致。'
+      },
+      {
+        id: 'r8', title: '第 8 阶段：安装收尾 + 软装进场', time: '约 15-20 天',
+        steps: [
+          '厨卫吊顶安装：铝扣板集成吊顶',
+          '橱柜/定制柜安装：调整水平、检查五金',
+          '木门/门套安装',
+          '地板/踢脚线安装',
+          '开关插座面板、灯具安装',
+          '卫浴洁具安装：马桶、浴室柜、花洒、浴霸',
+          '开荒保洁：全屋深度清洁',
+          '家具家电进场：按规划摆放',
+          '窗帘安装',
+          '通风散味：至少 1-2 个月再入住'
+        ],
+        precautions: '安装顺序很重要：先装厨卫吊顶→橱柜→门套→地板→踢脚线→开关灯具→洁具。先保洁再进家具，避免二次污染。入住前至少通风 1-2 个月，可配合活性炭和空气净化器。'
+      }
+    ]
+  },
+  stone: {
+    name: '精装房',
+    emoji: '✨',
+    color: 'stone',
+    phases: [
+      {
+        id: 's1', title: '第 1 阶段：收房验房', time: '1-2 天（交房当日）',
+        steps: [
+          '带齐验房工具：空鼓锤、水平仪、相位仪、手电筒、卷尺',
+          '全面检查：墙面空鼓/裂缝、地面平整度、门窗开关是否顺畅',
+          '水电测试：每个插座通电、每个水龙头出水、地漏排水是否畅通',
+          '瓷砖/地板仔细看：是否有色差、破损、空鼓',
+          '记录全部问题：拍照 + 文字记录，要求开发商限期整改',
+          '整改完成后二次验收：确认所有问题都已解决'
+        ],
+        precautions: '⚠️ 精装房最大的坑就是收房时没仔细看！建议请专业验房师（几百块钱，绝对值）。发现问题一定要书面记录，让开发商签字确认整改期限。不整改完不签字收房！'
+      },
+      {
+        id: 's2', title: '第 2 阶段：确定改造方案', time: '约 5-10 天',
+        steps: [
+          '明确需求：是只软装进场，还是需要局部拆改？',
+          '确定改造范围：拆不拆墙？改不改水电？换不换地板？',
+          '预算规划：纯软装约 800-1500元/㎡，加局改约 1500-3000元/㎡',
+          '找设计师或自己规划：精装房改造建议找有经验的设计师',
+          '确认哪些要保留：开发商做的瓷砖、吊顶、门等哪些不动的先标出来'
+        ],
+        precautions: '精装房改造最容易犯的错是"这也想改那也想改"，最后花了不少钱还不如毛坯从头装。建议先住一周感受空间，再决定改什么，避免冲动。'
+      },
+      {
+        id: 's3', title: '第 3 阶段：全屋定制柜方案', time: '约 7-14 天（与其他步骤可并行）',
+        steps: [
+          '确定需要定制的柜子：衣柜、橱柜、玄关柜、书柜、阳台柜等',
+          '找定制品牌量尺出方案：比较 2-3 家，看板材、五金、价格',
+          '确认水电点位：根据柜子布局调整或增加插座位置',
+          '确定柜体颜色与风格：确保与墙面、地板、窗帘整体协调'
+        ],
+        precautions: '定制柜是精装房改造的核心！方案要尽早敲定，因为会影响水电点位和墙面颜色。柜子颜色建议拿色板到现场比对，避免照片色差。五金件一定要选好的，百隆/海蒂诗之类，每天用的东西不能省。'
+      },
+      {
+        id: 's4', title: '第 4 阶段：局部拆改 + 封窗', time: '约 3-7 天',
+        steps: [
+          '拆除非承重隔墙或砌新墙（如需调整格局）',
+          '封阳台/换窗户：提高密封性和隔音效果',
+          '拆改需要更换的地板和踢脚线',
+          '清理拆除的建筑垃圾'
+        ],
+        precautions: '封窗要选断桥铝双层中空玻璃，隔音隔热好。拆改时做好成品保护，把不动的区域（尤其是开发商做好的瓷砖和门）用保护膜封起来，避免划伤碰坏。'
+      },
+      {
+        id: 's5', title: '第 5 阶段：水电调整', time: '约 3-5 天',
+        steps: [
+          '根据定制柜和家具布局，增加或调整插座、开关位置',
+          '新增灯位布线：如需要增加射灯、壁灯、氛围灯',
+          '智能家居布线预留：电动窗帘、智能开关等',
+          '水电测试验收'
+        ],
+        precautions: '精装房改水电一般是"微调"，主要增加实用插座。但要注意：新增点位要避开开发商的原始管线，最好提前用探测仪检查墙体。新增插座要单独走一路线，不要接到原有线路上。'
+      },
+      {
+        id: 's6', title: '第 6 阶段：墙面改造', time: '约 5-7 天',
+        steps: [
+          '修补拆除造成的墙面破损',
+          '全屋或局部刷艺术漆/乳胶漆：建议等定制柜颜色确定后再选墙面颜色',
+          '如需贴墙布/墙纸：先做墙面基层处理',
+          '背景墙制作：电视墙、床头背景墙等'
+        ],
+        precautions: '墙面颜色建议在定制柜快完工时敲定，这样可以确保墙面色调和柜体颜色协调。刷漆前做好地面和门窗的保护，油漆滴到瓷砖上很难清理。'
+      },
+      {
+        id: 's7', title: '第 7 阶段：美缝 + 安装工程', time: '约 7-10 天',
+        steps: [
+          '瓷砖美缝：等墙面漆干透后施工',
+          '安装隐形防护网、纱窗、纱门',
+          '安装阳台柜（先装防护网再装柜子！）',
+          '安装全屋定制柜',
+          '安装灯具：主灯、射灯、筒灯、氛围灯',
+          '安装窗帘轨道/罗马杆'
+        ],
+        precautions: '⚠️ 关键顺序：先装隐形防护网 → 再装阳台柜！否则柜子挡住的位置防护网拉不到位。定制柜安装时要在现场盯着，检查柜体是否水平、门板缝隙是否均匀、五金开合是否顺畅。'
+      },
+      {
+        id: 's8', title: '第 8 阶段：开荒保洁 + 家具家电 + 软装', time: '约 5-7 天',
+        steps: [
+          '全面开荒保洁：橱柜内部、瓷砖缝隙、门窗轨道等细节要清洁到位',
+          '大件家具进场：沙发、床、餐桌等',
+          '家电安装：电视、冰箱、洗衣机、空调等',
+          '窗帘安装',
+          '装饰软装：挂画、地毯、绿植、摆件',
+          '通风散味：至少 2-4 周'
+        ],
+        precautions: '先保洁再进家具！否则家具下面以后永远有灰。家具进场时做好地面保护，用纸板或地毯铺好。窗帘颜色要和墙面+家具风格协调。精装房虽然基装做好了，但开发商的材料也要散味，建议至少通风 2-4 周再入住。'
+      }
+    ]
+  },
+  self: {
+    name: '自建房',
+    emoji: '🏡',
+    color: 'self',
+    phases: [
+      {
+        id: 'z1', title: '第 1 阶段：前期准备与设计', time: '约 10-20 天',
+        steps: [
+          '量房出图：实测所有房间尺寸，出平面图',
+          '确定装修风格和预算：自建房面积大，预算要更充分',
+          '明确承重结构：确认哪些是承重墙/柱，哪些可以改动',
+          '设计水电图：自建房水电系统需要从零规划',
+          '选择装修方式：自建房建议半包或清包，自己把控材料',
+          '办理相关手续：部分农村自建房需要报备'
+        ],
+        precautions: '自建房面积通常比商品房大很多，装修预算要按实际面积算（不是建筑面积）。结构安全是第一位的，任何时候都不能动承重柱和承重墙。建议在土建阶段就把水电、排污管道预埋好，避免后期砸墙。'
+      },
+      {
+        id: 'z2', title: '第 2 阶段：结构安全确认', time: '约 1-2 天',
+        steps: [
+          '确认房屋承重结构图纸',
+          '标记所有承重墙、承重柱、梁的位置',
+          '确认楼板荷载：计划铺地暖或大型鱼缸等需要提前确认',
+          '检查屋顶防水和排水系统'
+        ],
+        precautions: '⚠️ 自建房结构安全全靠自己把关！没有物业也没有开发商兜底。拆改之前必须明确哪些能动哪些不能动。如果对结构有疑问，建议请专业人士看一下。'
+      },
+      {
+        id: 'z3', title: '第 3 阶段：封窗先行', time: '约 3-5 天',
+        steps: [
+          '确定窗户材质：断桥铝/铝合金/塑钢，推荐断桥铝双层中空',
+          '测量所有窗户洞口尺寸',
+          '先安装所有窗户框体',
+          '打密封胶，确保不漏水',
+          '安装窗扇和纱窗'
+        ],
+        precautions: '⚠️ 自建房封窗必须在水电改造之前完成！这是自建房和商品房的重大区别。因为自建房外墙直接与外界接触，不先封好窗户，水电施工时雨水容易灌进来，而且后续工序也受影响。'
+      },
+      {
+        id: 'z4', title: '第 4 阶段：主体拆改', time: '约 3-7 天',
+        steps: [
+          '拆除非承重隔墙',
+          '砌筑新隔墙：植筋挂网，顶部斜砌',
+          '包管道、包烟道',
+          '清理建筑垃圾'
+        ],
+        precautions: '自建房墙体多为砖混结构，比商品房框架结构更容易判断承重。但也要注意：有些看似隔墙的其实是配重墙，不能随便拆。砌新墙一定要植筋，自建房层高通常更高，墙体稳定性要重视。'
+      },
+      {
+        id: 'z5', title: '第 5 阶段：水电改造', time: '约 10-15 天',
+        steps: [
+          '全屋水电定位：自建房房间多，点位规划和布线量更大',
+          '开槽布管：水管建议走顶，电管走地/走墙',
+          '强弱电分离：间距至少 30cm',
+          '水管打压测试：0.8MPa，保持 30 分钟',
+          '排水管道连接：确认接入化粪池或市政管网',
+          '电路分组：照明、插座、空调、厨房各走各路',
+          '拍照留底存档'
+        ],
+        precautions: '自建房水电系统完全自主设计，要做足余量。建议入户主线至少 10 平方毫米铜线，空调 4 平方毫米，普通插座 2.5 平方毫米。水管建议全部用热水管（PPR 管），耐压性更好。排水坡度一定要做够，自建房排水通常是重力排水。'
+      },
+      {
+        id: 'z6', title: '第 6 阶段：防水工程', time: '约 5-7 天（比商品房更重视）',
+        steps: [
+          '屋顶防水：自建房屋顶防水是重中之重',
+          '卫生间防水：地面+墙面，淋浴区做到顶',
+          '厨房/阳台防水',
+          '外墙窗框周边防水加强',
+          '闭水试验：蓄水 48 小时，检查无渗漏',
+          '地下室/半地下室：如有，要做全空间防水防潮'
+        ],
+        precautions: '⚠️ 自建房防水比商品房更重要！商品房有整个楼的防水系统兜底，自建房全靠自己。屋顶防水建议用 SBS 改性沥青卷材 + 水泥砂浆保护层双层做法。外墙建议做防水涂料+保温层+饰面层。卫生间防水要做到吊顶高度！'
+      },
+      {
+        id: 'z7', title: '第 7 阶段：泥瓦工程', time: '约 20-25 天（面积大耗时更长）',
+        steps: [
+          '地面找平：水泥砂浆找平，预留地暖/地板厚度',
+          '墙面抹灰：挂网抹灰，防止开裂',
+          '瓷砖铺贴：先墙后地，从里往外',
+          '门槛石、窗台石安装',
+          '楼梯踏步铺贴（如有）',
+          '瓷砖美缝',
+          '庭院/露台地面铺装（如有）'
+        ],
+        precautions: '自建房墙面抹灰建议全屋挂钢丝网，尤其是砖混结构的，可以大大减少后期墙面开裂。瓷砖铺贴要留伸缩缝，自建房面积大，热胀冷缩更明显。美缝剂要选户外耐候型的（阳台和庭院）。'
+      },
+      {
+        id: 'z8', title: '第 8 阶段：木工工程', time: '约 12-18 天',
+        steps: [
+          '吊顶制作：轻钢龙骨+石膏板',
+          '背景墙造型',
+          '楼梯扶手/栏杆制作',
+          '木饰面安装',
+          '定制柜体安装（也可在油漆后）'
+        ],
+        precautions: '自建房层高通常较高（3 米以上），吊顶设计要注意比例，不要做得太矮压抑。木工材料要注意防潮，自建房一楼尤其要注意。南方自建房建议用防潮石膏板和防霉涂料。'
+      },
+      {
+        id: 'z9', title: '第 9 阶段：油漆工程', time: '约 12-18 天',
+        steps: [
+          '墙面基层处理',
+          '批刮腻子 2-3 遍',
+          '打磨墙面',
+          '刷底漆 1 遍',
+          '刷面漆 2 遍',
+          '外墙涂料施工（如需）',
+          '木器漆施工'
+        ],
+        precautions: '自建房建议内外墙都用耐候性好的涂料。内墙乳胶漆选优等品，自建房面积大换漆成本高。外墙用真石漆或弹性涂料，耐日晒雨淋。油漆期间注意通风，自建房通常通风条件更好。'
+      },
+      {
+        id: 'z10', title: '第 10 阶段：安装收尾 + 软装', time: '约 15-25 天',
+        steps: [
+          '厨卫吊顶安装',
+          '橱柜/定制柜安装',
+          '室内门/门套安装',
+          '楼梯扶手安装',
+          '地板/踢脚线安装',
+          '开关面板、灯具安装',
+          '卫浴洁具安装',
+          '庭院灯/户外水电安装',
+          '开荒保洁',
+          '家具家电进场',
+          '窗帘安装',
+          '通风散味'
+        ],
+        precautions: '自建房最后阶段工程量最大。如果带院子，户外水电和庭院灯也要同时做。安装工程注意顺序不能乱。自建房入住前建议通风 2-3 个月，面积大散味需要更长时间。'
+      }
+    ]
+  }
+};
+
+// ============ STATE ============
+let currentType = 'raw';
+let checkedPhases = { raw: {}, stone: {}, self: {} };
+
+// Load saved state
+try {
+  const saved = JSON.parse(localStorage.getItem('decoration_guide_checked'));
+  if (saved) checkedPhases = saved;
+} catch(e) {}
+
+function saveState() {
+  localStorage.setItem('decoration_guide_checked', JSON.stringify(checkedPhases));
+}
+
+// ============ RENDER ============
+function switchType(type) {
+  currentType = type;
+
+  // Update buttons
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.className = 'type-btn';
+    if (btn.dataset.type === type) btn.classList.add('active-' + type);
+  });
+
+  renderAll();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function renderAll() {
+  renderStats();
+  renderProgress();
+  renderQuickNav();
+  renderPhases();
+  updateThemeClass();
+}
+
+function renderStats() {
+  const d = data[currentType];
+  const phases = d.phases;
+  const checked = checkedPhases[currentType];
+  const doneCount = phases.filter(p => checked[p.id]).length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-item stat-${d.color}">
+      <div class="num">${phases.length}</div>
+      <div class="label">总阶段数</div>
+    </div>
+    <div class="stat-item stat-${d.color}">
+      <div class="num">${doneCount}</div>
+      <div class="label">已完成</div>
+    </div>
+    <div class="stat-item stat-${d.color}">
+      <div class="num">${phases.length - doneCount}</div>
+      <div class="label">待完成</div>
+    </div>
+  `;
+}
+
+function renderProgress() {
+  const d = data[currentType];
+  const phases = d.phases;
+  const checked = checkedPhases[currentType];
+  const doneCount = phases.filter(p => checked[p.id]).length;
+  const pct = phases.length > 0 ? Math.round((doneCount / phases.length) * 100) : 0;
+
+  document.getElementById('progressText').textContent = `${doneCount} / ${phases.length} 阶段完成`;
+  const fill = document.getElementById('progressFill');
+  fill.style.width = pct + '%';
+  fill.className = 'progress-fill ' + d.color;
+}
+
+function renderQuickNav() {
+  const d = data[currentType];
+  const checked = checkedPhases[currentType];
+  let html = '';
+  d.phases.forEach((p, i) => {
+    const done = checked[p.id] ? ' ✅' : '';
+    html += `<button class="quick-nav-btn active-${d.color}" onclick="scrollToPhase('${p.id}')">${i+1}. ${p.title.replace(/第 \d+ 阶段：/, '')}${done}</button>`;
+  });
+  document.getElementById('quickNav').innerHTML = html;
+}
+
+function scrollToPhase(id) {
+  const el = document.getElementById('phase-' + id);
+  if (el) {
+    // Open it first
+    const card = el.closest('.phase-card');
+    if (card && !card.classList.contains('open')) {
+      card.classList.add('open');
+    }
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function renderPhases() {
+  const d = data[currentType];
+  const checked = checkedPhases[currentType];
+  const color = d.color;
+
+  let html = '';
+  d.phases.forEach((p, idx) => {
+    const done = checked[p.id] || false;
+    const checkedClass = done ? ' done' : '';
+
+    html += `
+    <div class="phase-card ${done ? 'completed' : ''}" id="phase-${p.id}">
+      <div class="phase-header" onclick="togglePhase(this, '${p.id}')">
+        <div class="phase-number ${color}">${idx + 1}</div>
+        <div class="phase-info">
+          <div class="phase-title">${p.title}</div>
+          <div class="phase-time">⏱ ${p.time}</div>
+        </div>
+        <div class="phase-check${checkedClass}" onclick="event.stopPropagation(); toggleCheck('${p.id}')">${done ? '✓' : ''}</div>
+        <div class="phase-arrow">▼</div>
+      </div>
+      <div class="phase-detail">
+        <div class="phase-detail-inner">
+          <div class="detail-section">
+            <h4><span class="dot ${color}"></span> 操作步骤</h4>
+            <ul class="step-list">
+              ${p.steps.map(s => `<li class="${color}-dot">${s}</li>`).join('')}
+            </ul>
+          </div>
+          ${p.precautions ? `
+          <div class="precaution-box">
+            <strong><span class="warn-icon">⚠️</span> 注意事项</strong><br>${p.precautions}
+          </div>` : ''}
+          ${getExtraTip(p.id, color)}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('phasesContainer').innerHTML = html;
+}
+
+function getExtraTip(phaseId, color) {
+  const tips = {
+    'r1': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 前期准备阶段建议下载装修APP（住小帮/好好住等），多刷案例图，建立自己的灵感库。还可以加入本地的业主装修群，了解本地靠谱的工长和材料商。</div>',
+    'r3': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 厨房台面上方至少留 4 个带开关的插座；电视墙预埋一根 50mm PVC 管方便穿 HDMI 线；马桶旁预留智能马桶盖插座；玄关留一个烘鞋器插座。</div>',
+    'r8': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 入住前至少通风 1-2 个月。甲醛挥发期长达 3-15 年，建议持续保持通风，配合空气净化器和活性炭。有条件的可以找专业除甲醛公司做一次治理。</div>',
+    's1': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 验房时重点关注三个地方：1）卫生间防水（做闭水试验）；2）厨房烟道（点燃一张纸靠近烟道，看烟是否被吸入）；3）墙面平整度（用手电筒贴着墙照，看阴影）。</div>',
+    's7': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 安装顺序口诀：先脏后净、先里后外。防护网→阳台柜→室内定制柜→灯具→保洁→家具→窗帘。顺序错了会互相干扰甚至返工。</div>',
+    'z3': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 自建房窗户建议选断桥铝+双层钢化中空玻璃（5+12A+5），预算充足可以升级为三层中空或 Low-E 玻璃。窗户安装后一定要用发泡胶填充窗框和墙体缝隙，再打外墙耐候密封胶。</div>',
+    'z6': '<div class="tooltip-box"><strong>💡 小贴士：</strong> 自建房防水"三必做"：屋顶必做、卫生间必做、外墙必做。"三检查"：闭水 48 小时后检查楼下、检查管道根部、雨季后再检查一次外墙和屋顶。</div>'
+  };
+  return tips[phaseId] || '';
+}
+
+function togglePhase(headerEl, phaseId) {
+  const card = headerEl.closest('.phase-card');
+  card.classList.toggle('open');
+}
+
+function toggleCheck(phaseId) {
+  checkedPhases[currentType][phaseId] = !checkedPhases[currentType][phaseId];
+  saveState();
+  renderAll();
+}
+
+function resetAll() {
+  if (confirm('确定要重置所有勾选状态吗？此操作不可撤销。')) {
+    checkedPhases = { raw: {}, stone: {}, self: {} };
+    saveState();
+    renderAll();
+  }
+}
+
+function updateThemeClass() {
+  // Not needed for current design but kept for future
+}
+
+// ============ INIT ============
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('jumpTop');
+  if (window.scrollY > 400) {
+    btn.classList.add('visible');
+  } else {
+    btn.classList.remove('visible');
+  }
+});
+
+// Init on load
+renderAll();
+</script>
+</body>
+</html>
