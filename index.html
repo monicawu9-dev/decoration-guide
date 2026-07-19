@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>装修全流程指南 - 精装房/毛坯房/自建房</title>
+<title>装修全流程指南 - 精装房/毛坯房/自建房 + 家电家具选型</title>
 <style>
   :root {
     --bg: #f5f3ef;
@@ -25,6 +25,10 @@
     --color-self: #c4823e;
     --color-self-light: #fdf0e0;
     --color-self-bg: #fef9f2;
+    /* 家电家具选型 */
+    --color-appliance: #7c3aed;
+    --color-appliance-light: #ede9fe;
+    --color-appliance-bg: #f5f3ff;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,17 +66,13 @@
 
   /* Type Selector */
   .type-selector {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    justify-content: center;
     margin: 28px 0;
-    flex-wrap: wrap;
   }
   .type-btn {
-    flex: 1;
-    min-width: 140px;
-    max-width: 220px;
-    padding: 16px 20px;
+    padding: 16px 14px;
     border: 2px solid var(--border);
     border-radius: var(--radius);
     background: var(--card);
@@ -95,6 +95,7 @@
   .type-btn.active-stone { border-color: var(--color-stone); background: var(--color-stone-bg); color: var(--color-stone); }
   .type-btn.active-raw { border-color: var(--color-raw); background: var(--color-raw-bg); color: var(--color-raw); }
   .type-btn.active-self { border-color: var(--color-self); background: var(--color-self-bg); color: var(--color-self); }
+  .type-btn.active-appliance { border-color: var(--color-appliance); background: var(--color-appliance-bg); color: var(--color-appliance); }
 
   /* Stats Bar */
   .stats-bar {
@@ -117,6 +118,7 @@
   .stat-stone .num { color: var(--color-stone); }
   .stat-raw .num { color: var(--color-raw); }
   .stat-self .num { color: var(--color-self); }
+  .stat-appliance .num { color: var(--color-appliance); }
 
   /* Phase Card */
   .phase-card {
@@ -152,6 +154,7 @@
   .phase-number.stone { background: var(--color-stone); }
   .phase-number.raw { background: var(--color-raw); }
   .phase-number.self { background: var(--color-self); }
+  .phase-number.appliance { background: var(--color-appliance); }
 
   .phase-info { flex: 1; min-width: 0; }
   .phase-title { font-size: 17px; font-weight: 600; }
@@ -186,7 +189,7 @@
     padding: 0 20px 20px;
     border-top: 1px solid var(--border);
   }
-  .phase-card.open .phase-detail { max-height: 3000px; }
+  .phase-card.open .phase-detail { max-height: 5000px; }
 
   .detail-section {
     margin-top: 16px;
@@ -203,6 +206,7 @@
   .dot.stone { background: var(--color-stone); }
   .dot.raw { background: var(--color-raw); }
   .dot.self { background: var(--color-self); }
+  .dot.appliance { background: var(--color-appliance); }
 
   .step-list { list-style: none; }
   .step-list li {
@@ -224,6 +228,7 @@
   .step-list li.stone-dot::before { border-color: var(--color-stone); }
   .step-list li.raw-dot::before { border-color: var(--color-raw); }
   .step-list li.self-dot::before { border-color: var(--color-self); }
+  .step-list li.appliance-dot::before { border-color: var(--color-appliance); }
 
   .precaution-box {
     background: #fffbf5;
@@ -248,6 +253,67 @@
   .tooltip-box .tip-icon { margin-right: 4px; }
   .tooltip-box strong { color: #2563eb; }
 
+  /* Item Card (for appliance selection) */
+  .item-card {
+    background: linear-gradient(135deg, #faf9ff 0%, #f5f3ff 100%);
+    border: 1px solid var(--color-appliance-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 12px;
+    transition: all 0.2s;
+  }
+  .item-card:hover {
+    border-color: var(--color-appliance);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
+  }
+  .item-card .item-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+  .item-card .item-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--color-appliance);
+    color: #fff;
+    font-size: 11px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .item-card .item-row {
+    margin-top: 6px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .item-card .item-label {
+    color: var(--color-appliance);
+    font-size: 12px;
+    flex-shrink: 0;
+    width: 50px;
+    font-weight: 600;
+  }
+  .item-card .item-value {
+    color: var(--text);
+    font-size: 13px;
+    flex: 1;
+    line-height: 1.6;
+  }
+  .item-card .item-note {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #d8d4e8;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
   /* Progress Bar */
   .progress-container {
     margin: 20px 0 24px;
@@ -268,6 +334,7 @@
   .progress-fill.stone { background: var(--color-stone); }
   .progress-fill.raw { background: var(--color-raw); }
   .progress-fill.self { background: var(--color-self); }
+  .progress-fill.appliance { background: var(--color-appliance); }
 
   /* Jump to top */
   .jump-top {
@@ -300,6 +367,7 @@
   .quick-nav-btn.active-stone { border-color: var(--color-stone); color: var(--color-stone); background: var(--color-stone-light); font-weight: 600; }
   .quick-nav-btn.active-raw { border-color: var(--color-raw); color: var(--color-raw); background: var(--color-raw-light); font-weight: 600; }
   .quick-nav-btn.active-self { border-color: var(--color-self); color: var(--color-self); background: var(--color-self-light); font-weight: 600; }
+  .quick-nav-btn.active-appliance { border-color: var(--color-appliance); color: var(--color-appliance); background: var(--color-appliance-light); font-weight: 600; }
 
   /* Reset button */
   .reset-bar {
@@ -316,8 +384,10 @@
   /* Responsive */
   @media (max-width: 600px) {
     .header h1 { font-size: 22px; }
-    .type-btn { padding: 12px 14px; font-size: 14px; min-width: 100px; }
+    .type-selector { gap: 8px; }
+    .type-btn { padding: 12px 8px; font-size: 13px; }
     .type-btn .emoji { font-size: 22px; }
+    .type-btn .sub { font-size: 11px; }
     .stats-bar { gap: 12px; }
     .stat-item { padding: 10px 14px; min-width: 80px; }
     .stat-item .num { font-size: 20px; }
@@ -325,6 +395,10 @@
     .phase-title { font-size: 15px; }
     .phase-detail-inner { padding: 0 14px 16px; }
     .step-list li { font-size: 13px; padding: 6px 10px 6px 24px; }
+    .item-card { padding: 12px 14px; }
+    .item-card .item-name { font-size: 14px; }
+    .item-card .item-row { flex-direction: column; gap: 2px; }
+    .item-card .item-label { width: auto; }
   }
 </style>
 </head>
@@ -335,7 +409,7 @@
   <div class="header">
     <div class="icon">🏠</div>
     <h1>装修全流程指南</h1>
-    <p>精装房 · 毛坯房 · 自建房 — 再也不怕搞不清流程了</p>
+    <p>精装房 · 毛坯房 · 自建房 · 家电家具选型 — 一站搞定</p>
   </div>
 
   <!-- Type Selector -->
@@ -354,6 +428,11 @@
       <span class="emoji">🏡</span>
       自建房
       <div class="sub">独立宅院 · 从建到装</div>
+    </div>
+    <div class="type-btn" data-type="appliances" onclick="switchType('appliances')">
+      <span class="emoji">🛋️</span>
+      家电家具选型
+      <div class="sub">尺寸规划 · 品牌推荐</div>
     </div>
   </div>
 
@@ -715,17 +794,252 @@ const data = {
         precautions: '自建房最后阶段工程量最大。如果带院子，户外水电和庭院灯也要同时做。安装工程注意顺序不能乱。自建房入住前建议通风 2-3 个月，面积大散味需要更长时间。'
       }
     ]
+  },
+  appliances: {
+    name: '家电家具选型',
+    emoji: '🛋️',
+    color: 'appliance',
+    phases: [
+      {
+        id: 'a1', title: '客厅', time: '建议在水电改造前确定关键尺寸',
+        items: [
+          {
+            name: '沙发',
+            type: '家具',
+            size: '三人位 200-220cm / 双人位 160-180cm / 进深 95-105cm',
+            timing: '装修前确定款式和尺寸',
+            brands: '顾家、芝华仕、林氏木业、左右、造作、源氏木语',
+            note: '沙发进深影响坐感：太浅（<90cm）坐着腰累；太深（>110cm）靠不到后背。L 形沙发适合大客厅，但要注意是否挡阳台门。'
+          },
+          {
+            name: '空调',
+            type: '家电',
+            size: '客厅 20-30㎡ 用 2 匹；30-40㎡ 用 3 匹；40㎡+ 用 5 匹',
+            timing: '⚠️ 必须在水电改造前确定！涉及吊顶和管道',
+            brands: '中央空调（一拖 N）：大金、日立、三菱电机、约克、格力；风管机（一拖 1）：美的、格力、海尔、海信',
+            note: '风管机 vs 一拖多中央空调：风管机便宜适合 1-2 个房间；中央空调适合多房间统一控制但价格高。客厅推荐风管机，卧室多的全屋用中央空调。风口不要直吹沙发！'
+          },
+          {
+            name: '电视',
+            type: '家电',
+            size: '55 / 65 / 75 / 85 寸',
+            timing: '装修时预埋 HDMI 线，确定电视墙位置',
+            brands: '索尼、海信、TCL、小米、三星、华为',
+            note: '尺寸参考（沙发到电视距离）：2.5-3m 选 55 寸；3-3.5m 选 65 寸；3.5-4m 选 75 寸；4m+ 选 85 寸+。当下流行"选大不选小"。'
+          },
+          {
+            name: '茶几',
+            type: '家具',
+            size: '长方形 100-140cm / 圆形直径 70-90cm',
+            timing: '与沙发一起规划',
+            brands: '林氏木业、源氏木语、维莎',
+            note: '茶几与沙发之间留 30-40cm 距离方便走动；与电视之间留 100cm+ 方便看腿。'
+          }
+        ],
+        precautions: '客厅是家电家具最集中的空间。建议在水电改造前就把沙发布局、空调方案、电视墙位置全部定好，否则后期返工很麻烦。空调位置尤其关键——风口不要直吹沙发或床！'
+      },
+      {
+        id: 'a2', title: '餐厅', time: '装修前确定',
+        items: [
+          {
+            name: '餐桌',
+            type: '家具',
+            size: '4 人桌 120-140cm / 6 人桌 150-180cm / 8 人桌 200cm+',
+            timing: '装修前确定',
+            brands: '林氏木业、源氏木语、维莎、造作',
+            note: '餐桌周围至少留 80-90cm 通行距离，否则坐下后无法通过。可伸缩餐桌是小户型首选。'
+          },
+          {
+            name: '餐边柜',
+            type: '家具',
+            size: '宽 120-180cm / 深 40-45cm / 高 80-100cm',
+            timing: '与餐桌一起确定',
+            brands: '林氏木业、源氏木语、宜家',
+            note: '位置预留插座，方便放小家电（电饭煲、烧水壶、咖啡机等）。中间留空设计更实用。'
+          }
+        ],
+        precautions: '餐厅家具相对简单，但餐桌和餐边柜的尺寸影响动线，提前规划好能避免拥挤。'
+      },
+      {
+        id: 'a3', title: '厨房', time: '⚠️ 必须在水电改造前确定所有嵌入式电器',
+        items: [
+          {
+            name: '冰箱',
+            type: '家电',
+            size: '3-4 人 400-500L / 5+ 人 500L+',
+            timing: '厨房设计时确定尺寸和位置',
+            brands: '西门子、博世、海尔、卡萨帝、容声、松下',
+            note: '嵌入式冰箱需要预留散热空间（左右上各 5cm）。普通独立式冰箱两侧留 10cm 散热。冰箱位置要远离灶具和水槽，避免影响使用寿命。'
+          },
+          {
+            name: '油烟机',
+            type: '家电',
+            size: '风量 20m³/min+（开放式厨房需 23m³/min+）',
+            timing: '厨房设计时确定',
+            brands: '方太、老板、华帝、美的、西门子',
+            note: '油烟机到灶具距离 65-75cm。安装前预留烟道止逆阀（防止邻居家烟味倒灌）。侧吸式不撞头，顶吸式拢烟效果好。'
+          },
+          {
+            name: '燃气灶',
+            type: '家电',
+            size: '单灶 / 双灶 / 三灶',
+            timing: '厨房设计时确定',
+            brands: '方太、老板、华帝、美的、林内',
+            note: '灶具位置决定厨房动线。一般遵循"洗-切-炒"流程：水槽→操作台→灶具。'
+          },
+          {
+            name: '洗碗机',
+            type: '家电',
+            size: '8 套（2-3 人）/ 13 套（3-5 人）/ 15 套（5+ 人）',
+            timing: '⚠️ 必须在水电改造前确定！预留进出水管和电源',
+            brands: '西门子、美的、海尔、博世、松下',
+            note: '嵌入式最美观，台式最省事。13 套是家庭最常见的选择，能洗锅。安装位置一般在水槽旁边，方便进出水管。'
+          },
+          {
+            name: '蒸烤箱 / 微蒸烤一体机',
+            type: '家电',
+            size: '50-60L（家庭常用）',
+            timing: '厨房设计时确定',
+            brands: '凯度、老板、方太、西门子、松下',
+            note: '嵌入式美观，位置提前规划。微蒸烤一体机比单独买更省空间。'
+          }
+        ],
+        precautions: '厨房是家电最密集的空间！水电改造前必须确定所有嵌入式电器的尺寸和位置（冰箱、油烟机、洗碗机、蒸烤箱），否则后期装不下或者位置尴尬。冰箱单独走 1 路 2.5 平方线，烤箱单独走 4 平方线。'
+      },
+      {
+        id: 'a4', title: '卧室', time: '装修前确定布局',
+        items: [
+          {
+            name: '床',
+            type: '家具',
+            size: '1.5m（紧凑双人）/ 1.8m（标准双人）/ 2m（豪华双人）',
+            timing: '装修前确定尺寸',
+            brands: '慕思、喜临门、顾家、雅兰、舒达、金可儿',
+            note: '床两侧各留 50-60cm 通道（放床头柜+过人），床尾留 60-70cm。1.8m 床需要房间宽度 ≥ 3.2m 才舒服。主卧推荐 1.8m，次卧可以 1.5m。'
+          },
+          {
+            name: '衣柜',
+            type: '家具',
+            size: '进深 550-600mm / 高度 2400-2800mm（顶天立地）',
+            timing: '与硬装同步规划',
+            brands: '索菲亚、欧派、尚品宅配、志邦、好莱客',
+            note: '提前规划好挂衣区、叠放区比例。一般挂衣区：叠放区 = 6:4。推拉门省空间但密封性差，平开门密封好但需要开门空间。'
+          },
+          {
+            name: '床头柜',
+            type: '家具',
+            size: '宽 40-60cm / 深 35-45cm / 高 45-55cm',
+            timing: '与床一起规划',
+            brands: '林氏木业、源氏木语、造作',
+            note: '床头柜上要预留插座（手机充电、台灯）。床两侧各一个才够用。'
+          }
+        ],
+        precautions: '卧室家具以床和衣柜为主，床的位置决定整个房间布局。建议床靠墙但不靠窗（避免风吹和雨淋）。'
+      },
+      {
+        id: 'a5', title: '卫生间', time: '水电改造前确定',
+        items: [
+          {
+            name: '马桶',
+            type: '家电',
+            size: '坑距 305mm / 400mm（选购前要测量）',
+            timing: '水电改造前确定',
+            brands: 'TOTO、科勒、九牧、箭牌、惠达',
+            note: '智能马桶需要预留电源（最好带防溅盒）。墙排马桶颜值高但维修麻烦，地排马桶实用。'
+          },
+          {
+            name: '浴室柜',
+            type: '家具',
+            size: '单盆 60-80cm / 双盆 100-120cm',
+            timing: '水电改造时确定',
+            brands: '九牧、箭牌、TOTO、科勒',
+            note: '墙排水 vs 地排水影响安装方式。挂墙式颜值高易清洁，但需要承重墙。'
+          },
+          {
+            name: '淋浴 / 浴缸',
+            type: '家具',
+            size: '淋浴房 80×80cm / 90×90cm / 浴缸长度 1.5-1.8m',
+            timing: '水电改造时确定',
+            brands: 'TOTO、科勒、九牧、箭牌、摩恩',
+            note: '小户型建议淋浴为主；只有一个卫生间的不建议做浴缸（不实用）。'
+          },
+          {
+            name: '洗衣机 / 烘干机（放卫生间）',
+            type: '家电',
+            size: '容量 8-10kg（家庭常用）',
+            timing: '水电改造前确定位置',
+            brands: '西门子、博世、海尔、小天鹅、LG',
+            note: '洗烘分体效果更好，但需要两个位置；洗烘一体更省空间。卫生间放洗衣机注意干湿分离。'
+          }
+        ],
+        precautions: '卫生间涉及水电最多，所有大件必须在水电改造前确定位置。马桶、浴室柜、淋浴房的安装尺寸和位置影响整个空间布局。'
+      },
+      {
+        id: 'a6', title: '阳台', time: '水电改造前确定',
+        items: [
+          {
+            name: '洗衣机 / 烘干机',
+            type: '家电',
+            size: '容量 8-10kg',
+            timing: '水电改造前确定位置',
+            brands: '西门子、博世、海尔、小天鹅、LG',
+            note: '阳台洗衣机位置要预留上下水和电源。注意防晒、防雨，必要时做洗衣机柜或者加装遮阳棚。'
+          },
+          {
+            name: '阳台柜 / 洗衣柜',
+            type: '家具',
+            size: '宽 60-120cm / 深 50-60cm / 高 80-90cm',
+            timing: '水电改造时确定',
+            brands: '林氏木业、九牧、箭牌',
+            note: '阳台柜能收纳洗衣液、衣架等杂物。柜体要选防潮材质（多层板或不锈钢）。'
+          }
+        ],
+        precautions: '阳台主要是洗衣机位置，要做好防水和上下水。如果阳台朝西晒，建议加装遮阳帘保护洗衣机。'
+      },
+      {
+        id: 'a7', title: '全屋通用', time: '贯穿整个装修过程',
+        items: [
+          {
+            name: '开关插座',
+            type: '建材',
+            size: '五孔 / 三孔 / 带 USB / 智能',
+            timing: '水电改造时确定',
+            brands: '西门子、施耐德、罗格朗、公牛、欧普',
+            note: '插座宁可多留几个。常见遗漏：床头忘留 USB、沙发旁忘留地插、马桶旁忘留电源、玄关忘留烘鞋器插座。'
+          },
+          {
+            name: '灯具',
+            type: '建材',
+            size: '主灯 + 辅灯 + 氛围灯',
+            timing: '装修中后期',
+            brands: '欧普、雷士、飞利浦、松下、米家',
+            note: '建议主灯+辅灯组合。客厅可以无主灯（用射灯+筒灯更高级）。卧室要装双控开关（门口+床头）。'
+          },
+          {
+            name: '窗帘',
+            type: '软装',
+            size: '按窗户尺寸定制',
+            timing: '装修尾期',
+            brands: '摩力克、艾绣、宜家',
+            note: '客厅、卧室、书房对遮光要求不同，材质和厚度也不同。电动窗帘需要在窗户旁预留电源。'
+          }
+        ],
+        precautions: '这些是全屋通用的建材和软装，贯穿整个装修过程。建议做个清单表，每完成一项打勾，避免遗漏。'
+      }
+    ]
   }
 };
 
 // ============ STATE ============
 let currentType = 'raw';
-let checkedPhases = { raw: {}, stone: {}, self: {} };
+let checkedPhases = { raw: {}, stone: {}, self: {}, appliances: {} };
 
 // Load saved state
 try {
   const saved = JSON.parse(localStorage.getItem('decoration_guide_checked'));
-  if (saved) checkedPhases = saved;
+  if (saved) {
+    checkedPhases = { raw: {}, stone: {}, self: {}, appliances: {}, ...saved };
+  }
 } catch(e) {}
 
 function saveState() {
@@ -760,20 +1074,43 @@ function renderStats() {
   const checked = checkedPhases[currentType];
   const doneCount = phases.filter(p => checked[p.id]).length;
 
-  document.getElementById('statsBar').innerHTML = `
-    <div class="stat-item stat-${d.color}">
-      <div class="num">${phases.length}</div>
-      <div class="label">总阶段数</div>
-    </div>
-    <div class="stat-item stat-${d.color}">
-      <div class="num">${doneCount}</div>
-      <div class="label">已完成</div>
-    </div>
-    <div class="stat-item stat-${d.color}">
-      <div class="num">${phases.length - doneCount}</div>
-      <div class="label">待完成</div>
-    </div>
-  `;
+  // For appliances, count total items
+  let totalItems = 0;
+  if (currentType === 'appliances') {
+    phases.forEach(p => { if (p.items) totalItems += p.items.length; });
+  }
+
+  if (currentType === 'appliances') {
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${phases.length}</div>
+        <div class="label">房间分类</div>
+      </div>
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${totalItems}</div>
+        <div class="label">选型品类</div>
+      </div>
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${doneCount}</div>
+        <div class="label">已规划</div>
+      </div>
+    `;
+  } else {
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${phases.length}</div>
+        <div class="label">总阶段数</div>
+      </div>
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${doneCount}</div>
+        <div class="label">已完成</div>
+      </div>
+      <div class="stat-item stat-${d.color}">
+        <div class="num">${phases.length - doneCount}</div>
+        <div class="label">待完成</div>
+      </div>
+    `;
+  }
 }
 
 function renderProgress() {
@@ -822,6 +1159,29 @@ function renderPhases() {
     const done = checked[p.id] || false;
     const checkedClass = done ? ' done' : '';
 
+    let bodyContent = '';
+
+    // Handle items (for appliances section)
+    if (p.items) {
+      bodyContent = `
+        <div class="detail-section">
+          <h4><span class="dot ${color}"></span> 选型清单</h4>
+          ${p.items.map(item => renderItemCard(item)).join('')}
+        </div>
+      `;
+    }
+    // Handle steps (for room types)
+    else if (p.steps) {
+      bodyContent = `
+        <div class="detail-section">
+          <h4><span class="dot ${color}"></span> 操作步骤</h4>
+          <ul class="step-list">
+            ${p.steps.map(s => `<li class="${color}-dot">${s}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+
     html += `
     <div class="phase-card ${done ? 'completed' : ''}" id="phase-${p.id}">
       <div class="phase-header" onclick="togglePhase(this, '${p.id}')">
@@ -835,12 +1195,7 @@ function renderPhases() {
       </div>
       <div class="phase-detail">
         <div class="phase-detail-inner">
-          <div class="detail-section">
-            <h4><span class="dot ${color}"></span> 操作步骤</h4>
-            <ul class="step-list">
-              ${p.steps.map(s => `<li class="${color}-dot">${s}</li>`).join('')}
-            </ul>
-          </div>
+          ${bodyContent}
           ${p.precautions ? `
           <div class="precaution-box">
             <strong><span class="warn-icon">⚠️</span> 注意事项</strong><br>${p.precautions}
@@ -852,6 +1207,21 @@ function renderPhases() {
   });
 
   document.getElementById('phasesContainer').innerHTML = html;
+}
+
+function renderItemCard(item) {
+  return `
+    <div class="item-card">
+      <div class="item-name">
+        ${item.name}
+        <span class="item-tag">${item.type}</span>
+      </div>
+      ${item.size ? `<div class="item-row"><span class="item-label">尺寸</span><span class="item-value">${item.size}</span></div>` : ''}
+      ${item.timing ? `<div class="item-row"><span class="item-label">选购</span><span class="item-value">${item.timing}</span></div>` : ''}
+      ${item.brands ? `<div class="item-row"><span class="item-label">品牌</span><span class="item-value">${item.brands}</span></div>` : ''}
+      ${item.note ? `<div class="item-note">💡 ${item.note}</div>` : ''}
+    </div>
+  `;
 }
 
 function getExtraTip(phaseId, color) {
@@ -880,7 +1250,7 @@ function toggleCheck(phaseId) {
 
 function resetAll() {
   if (confirm('确定要重置所有勾选状态吗？此操作不可撤销。')) {
-    checkedPhases = { raw: {}, stone: {}, self: {} };
+    checkedPhases = { raw: {}, stone: {}, self: {}, appliances: {} };
     saveState();
     renderAll();
   }
